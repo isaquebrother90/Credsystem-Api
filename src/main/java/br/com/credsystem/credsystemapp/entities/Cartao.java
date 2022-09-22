@@ -17,7 +17,7 @@ public class Cartao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCartao;
 
-    private String número;
+    private String numero;
 
     private String senha;
 

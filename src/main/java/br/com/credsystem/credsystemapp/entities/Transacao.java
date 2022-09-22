@@ -1,0 +1,21 @@
+package br.com.credsystem.credsystemapp.entities;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Transacao {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Double valor;
+}
