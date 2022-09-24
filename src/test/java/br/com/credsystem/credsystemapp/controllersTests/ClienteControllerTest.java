@@ -9,6 +9,7 @@ import br.com.credsystem.credsystemapp.utils.ClientePayload;
 import br.com.credsystem.credsystemapp.utils.JsonUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -40,10 +41,11 @@ public class ClienteControllerTest {
 
     @Test
     void listAll() throws Exception{
-        var cliente = new Cliente();
+        var cliente = new ClienteDTO();
         cliente.setId(ClientePayload.id);
         cliente.setCpf(ClientePayload.cpf);
         cliente.setSalario(ClientePayload.salario);
+        Mockito.when(cService.listAll()).thenReturn(List.of(cliente)); //.searchById(cliente.getId())).thenReturn(cliente);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/clientes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtils.getJsonFromObject(cliente)))
@@ -71,5 +73,22 @@ public class ClienteControllerTest {
 
        Cliente returnedClienteDto = JsonUtils.getObjectFromJson(result.getResponse().getContentAsString(), Cliente.class);
        Assertions.assertNotNull(returnedClienteDto);
+    }
+    @Test
+    void save() throws Exception{
+        var cliente = new ClienteDTO();
+        cliente.setId(ClientePayload.id);
+        cliente.setCpf(ClientePayload.cpf);
+        cliente.setSalario(ClientePayload.salario);
+       MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/clientes", 1)
+                       .contentType(MediaType.APPLICATION_JSON)
+                       .content(JsonUtils.getJsonFromObject(cliente)))
+//                .andDo(print())
+               .andExpect(status().isOk())
+               .andReturn();
+
+       List<Cliente> returnedClienteDto = JsonUtils.getObjectListFromJson(result.getResponse().getContentAsString(), Cliente.class);
+       Assertions.assertNotNull(returnedClienteDto);
+
     }
 }

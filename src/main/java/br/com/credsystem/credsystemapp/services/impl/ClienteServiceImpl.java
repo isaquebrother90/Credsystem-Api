@@ -42,12 +42,12 @@ public class ClienteServiceImpl implements ClienteService {
     }
     @Override
     public ClienteDTO update(ClienteDTO clienteDTO){
-        Optional<Cliente> cliente = repository.findById(clienteDTO.getId());
-        if (!cliente.isPresent()) {
+        Optional<Cliente> idCliente = repository.findById(clienteDTO.getId());
+        if (!idCliente.isPresent()) {
             throw new ClienteNaoEncontradoException("Cliente não encontrado.");
         }
-       repository.save(toCliente(clienteDTO));
-        return null;
+       Cliente cliente = repository.save(toCliente(clienteDTO));
+        return toClienteDTO(cliente);
     }
 
     @Override
