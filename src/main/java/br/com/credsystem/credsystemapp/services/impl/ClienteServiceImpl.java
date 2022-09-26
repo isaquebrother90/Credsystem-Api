@@ -1,6 +1,7 @@
 package br.com.credsystem.credsystemapp.services.impl;
 
-import br.com.credsystem.credsystemapp.dtos.ClienteDTO;
+import br.com.credsystem.credsystemapp.dtos.request.ClienteDTORequest;
+import br.com.credsystem.credsystemapp.dtos.response.ClienteDTOResponse;
 import br.com.credsystem.credsystemapp.entities.Cliente;
 import br.com.credsystem.credsystemapp.exceptions.ClienteJaExisteException;
 import br.com.credsystem.credsystemapp.exceptions.ClienteNaoEncontradoException;
@@ -28,38 +29,39 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public List<ClienteDTO> listAll() {
-        return repository.findAll().stream().map(this::toClienteDTO).collect(Collectors.toList());
+    public List<ClienteDTOResponse> listAll() {
+        return repository.findAll().stream().map(this::toClienteDTOResponse).collect(Collectors.toList());
     }
 
     @Override
-    public ClienteDTO save(ClienteDTO clienteDTO) {
-        Cliente clienteCPF = repository.findClienteByCpf(clienteDTO.getCpf());
+    public ClienteDTORequest save(ClienteDTORequest clienteDTORequest) {
+        Cliente clienteCPF = repository.findClienteByCpf(clienteDTORequest.getCpf());
         if (nonNull(clienteCPF)) {
             throw new ClienteJaExisteException("O cliente já existe.");
         }
-        Cliente cliente = repository.save(toCliente(clienteDTO));
-        return toClienteDTO(cliente);
+        Cliente cliente = repository.save(toCliente(clienteDTORequest));
+        return toClienteDTORequest(cliente);
     }
+
     @Override
-    public ClienteDTO update(ClienteDTO clienteDTO){
+    public ClienteDTORequest update(ClienteDTORequest clienteDTO) {
         Optional<Cliente> idCliente = repository.findById(clienteDTO.getId());
         if (!idCliente.isPresent()) {
             throw new ClienteNaoEncontradoException("Cliente não encontrado.");
         }
-       Cliente cliente = repository.save(toCliente(clienteDTO));
-        return toClienteDTO(cliente);
+        Cliente cliente = repository.save(toCliente(clienteDTO));
+        return toClienteDTORequest(cliente);
     }
 
     @Override
-    public ClienteDTO searchById(Long id) {
+    public ClienteDTOResponse searchById(Long id) {
         Optional<Cliente> cliente = repository.findById(id);
 
         if (!cliente.isPresent()) {
             throw new ClienteNaoEncontradoException("Cliente não encontrado.");
         }
 
-        return toClienteDTO(cliente);
+        return toClienteDTOResponse(cliente);
     }
 
     @Override
@@ -73,15 +75,27 @@ public class ClienteServiceImpl implements ClienteService {
         repository.deleteById(id);
     }
 
-    private ClienteDTO toClienteDTO(Optional<Cliente> cliente) {
-        return modelMapper.map(cliente, ClienteDTO.class);
+    private ClienteDTORequest toClienteDTORequest(Optional<Cliente> cliente) {
+        return modelMapper.map(cliente, ClienteDTORequest.class);
     }
 
-    private ClienteDTO toClienteDTO(Cliente cliente) {
-        return modelMapper.map(cliente, ClienteDTO.class);
+    private ClienteDTORequest toClienteDTORequest(Cliente cliente) {
+        return modelMapper.map(cliente, ClienteDTORequest.class);
     }
 
-    private Cliente toCliente(ClienteDTO clienteDTO) {
-        return modelMapper.map(clienteDTO, Cliente.class);
+    private ClienteDTOResponse toClienteDTOResponse(Optional<Cliente> cliente) {
+        return modelMapper.map(cliente, ClienteDTOResponse.class);
+    }
+
+    private ClienteDTOResponse toClienteDTOResponse(Cliente cliente) {
+        return modelMapper.map(cliente, ClienteDTOResponse.class);
+    }
+
+    private Cliente toCliente(ClienteDTORequest clienteDTORequest) {
+        return modelMapper.map(clienteDTORequest, Cliente.class);
+    }
+
+    private Cliente toCliente(ClienteDTOResponse clienteDTOResponse) {
+        return modelMapper.map(clienteDTOResponse, Cliente.class);
     }
 }

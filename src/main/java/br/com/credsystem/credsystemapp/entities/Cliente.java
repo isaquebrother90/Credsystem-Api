@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,4 +22,6 @@ public class Cliente implements Serializable {
     private String cpf;
     @Column(name = "salario")
     private Double salario;
+    @OneToMany(mappedBy = "cliente", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private List<Cartao> cartoes;
 }

@@ -1,16 +1,18 @@
 package br.com.credsystem.credsystemapp.services;
 
-import br.com.credsystem.credsystemapp.dtos.ClienteDTO;
-import br.com.credsystem.credsystemapp.entities.Cliente;
+import br.com.credsystem.credsystemapp.dtos.request.ClienteDTORequest;
+import br.com.credsystem.credsystemapp.dtos.response.ClienteDTOResponse;
 
 import java.util.List;
 
 public interface ClienteService {
-    List<ClienteDTO> listAll();
-    ClienteDTO save(ClienteDTO clienteDTO);
-    ClienteDTO searchById(Long id);
+    List<ClienteDTOResponse> listAll();
 
-    ClienteDTO update(ClienteDTO clienteDTO);
+    ClienteDTORequest save(ClienteDTORequest clienteDTORequest);
+
+    ClienteDTOResponse searchById(Long id);
+
+    ClienteDTORequest update(ClienteDTORequest clienteDTORequest);
 
     void delete(Long id);
 
