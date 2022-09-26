@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ClienteService {
     List<ClienteDTO> listAll();
-    void save(ClienteDTO clienteDTO);
+    ClienteDTO save(ClienteDTO clienteDTO);
     ClienteDTO searchById(Long id);
 
     ClienteDTO update(ClienteDTO clienteDTO);

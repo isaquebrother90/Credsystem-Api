@@ -33,12 +33,13 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public void save(ClienteDTO clienteDTO) {
-        Cliente cliente = repository.findClienteByCpf(clienteDTO.getCpf());
-        if (nonNull(cliente)) {
+    public ClienteDTO save(ClienteDTO clienteDTO) {
+        Cliente clienteCPF = repository.findClienteByCpf(clienteDTO.getCpf());
+        if (nonNull(clienteCPF)) {
             throw new ClienteJaExisteException("O cliente já existe.");
         }
-        repository.save(toCliente(clienteDTO));
+        Cliente cliente = repository.save(toCliente(clienteDTO));
+        return toClienteDTO(cliente);
     }
     @Override
     public ClienteDTO update(ClienteDTO clienteDTO){

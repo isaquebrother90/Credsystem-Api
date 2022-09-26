@@ -21,7 +21,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
+import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,15 +83,50 @@ public class ClienteControllerTest {
         cliente.setId(ClientePayload.id);
         cliente.setCpf(ClientePayload.cpf);
         cliente.setSalario(ClientePayload.salario);
-       MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/clientes", 1)
+        Mockito.when(cService.save(any())).thenReturn(cliente);
+       MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/clientes")
                        .contentType(MediaType.APPLICATION_JSON)
                        .content(JsonUtils.getJsonFromObject(cliente)))
 //                .andDo(print())
-               .andExpect(status().isOk())
+               .andExpect(status().isCreated())
                .andReturn();
 
-       List<Cliente> returnedClienteDto = JsonUtils.getObjectListFromJson(result.getResponse().getContentAsString(), Cliente.class);
+       Cliente returnedClienteDto = JsonUtils.getObjectFromJson(result.getRequest().getContentAsString(), Cliente.class);
        Assertions.assertNotNull(returnedClienteDto);
+    }
 
+    @Test
+    void update() throws Exception{
+        var cliente = new ClienteDTO();
+        cliente.setId(ClientePayload.id);
+        cliente.setCpf(ClientePayload.cpf);
+        cliente.setSalario(ClientePayload.salario);
+        Mockito.when( cService.update(cliente)).thenReturn(cliente);//cService.save(any())).thenReturn(cliente);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/clientes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtils.getJsonFromObject(cliente)))
+//                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Cliente returnedClienteDto = JsonUtils.getObjectFromJson(result.getRequest().getContentAsString(), Cliente.class);
+        Assertions.assertNotNull(returnedClienteDto);
+    }
+
+    @Test
+    void delete() throws Exception{
+        var cliente = new ClienteDTO();
+        cliente.setId(ClientePayload.id);
+        cliente.setCpf(ClientePayload.cpf);
+        cliente.setSalario(ClientePayload.salario);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/clientes/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtils.getJsonFromObject(cliente)))
+//                .andDo(print())
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        Cliente returnedClienteDto = JsonUtils.getObjectFromJson(result.getRequest().getContentAsString(), Cliente.class);
+        Assertions.assertNotNull(returnedClienteDto);
     }
 }

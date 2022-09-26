@@ -17,6 +17,8 @@ public class ClienteController {
     @Autowired
     private final ClienteService clienteService;
 
+    private static final String ID = "/{id}";
+
     public ClienteController(ClienteService clienteService) {
         this.clienteService = clienteService;
     }
@@ -26,7 +28,7 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.listAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(ID)
     public ResponseEntity<ClienteDTO> searchById(@PathVariable ("id") Long id){
         return ResponseEntity.ok(clienteService.searchById(id));
     }
@@ -41,7 +43,7 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.update(clienteDTO));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping(ID)
     public ResponseEntity<Void> delete(@PathVariable("id") Long id){
         clienteService.delete(id);
         return ResponseEntity.noContent().build();
